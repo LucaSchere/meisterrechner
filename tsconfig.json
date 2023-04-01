@@ -22,7 +22,13 @@
     "baseUrl": "src/",
     "paths": {
       "@/*": ["/*"],
-      "@/components/*": ["components/*"]
+      "@/components/*": ["components/*"],
+      "@/models/*": ["models/*"],
+      "@/context/*": ["context/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/api/*": ["api/*"],
+      "@/helpers/*": ["helpers/*"],
+      "@/mocks/*": ["mocks/*"],
      }
   },
   "include": [

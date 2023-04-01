@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,15 +12,23 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Titillium Web', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 100%;
   scroll-behavior: smooth;
 }
 
+@layer base {
+  html {
+    font-family: Proxima Nova, system-ui, sans-serif;
+  }
+}
 
 @layer components {
   .content-width {
     @apply mx-auto max-w-7xl;
   }
 
+  .badge {
+    @apply inline-block whitespace-nowrap rounded-[0.27rem] px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline font-bold leading-none
+  }
 }
