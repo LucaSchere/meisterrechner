@@ -1,8 +1,7 @@
 enum MatchState {
+    InProgress,
     NotStarted,
-    WinHome,
-    WinAway,
-    Draw,
+    Finished,
 }
 
 export default MatchState;

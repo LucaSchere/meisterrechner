@@ -1,5 +1,5 @@
 export interface ITable {
-    table: IStanding[]
+    standings: IStanding[]
 }
 
 export interface IStanding {

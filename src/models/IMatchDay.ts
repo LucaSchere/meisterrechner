@@ -1,6 +1,6 @@
-import {IEvents} from "@/models/IEvent";
+import {IEvent} from "@/models/IEvent";
 
 export interface IMatchDay {
     round: number;
-    events: IEvents;
+    events: IEvent[];
 }

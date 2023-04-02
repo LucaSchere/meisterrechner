@@ -1,56 +1,55 @@
 import * as React from 'react';
+import {useEffect} from 'react';
 import Card from "@/components/shared/Card";
 import formatMatchDate from "@/helpers/formatMatchDate";
 import renameTeam from "@/helpers/renameTeam";
 import MatchState from "@/models/MatchState";
-import {useEffect} from "react";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import {IEvent} from "@/models/IEvent";
+import {CalculatorContext} from "@/context/CalculatorContext";
+import MatchResult from "@/models/MatchResult";
 
 interface IMatchCardProps {
-    home: string;
-    away: string;
-    date: string;
+    event: IEvent;
 }
 
 const MatchCard = (props: IMatchCardProps): JSX.Element => {
 
     const onUltraSmallDevice = useMediaQuery('(max-width: 360px)');
 
-    const formattedDate = formatMatchDate(props.date);
-    const home = renameTeam(props.home, onUltraSmallDevice);
-    const away = renameTeam(props.away, onUltraSmallDevice);
+    const formattedDate = formatMatchDate(props.event.strTimestamp);
+    const home = renameTeam(props.event.strHomeTeam, onUltraSmallDevice);
+    const away = renameTeam(props.event.strAwayTeam, onUltraSmallDevice);
 
-    const [matchState, setMatchState] = React.useState<MatchState>(MatchState.NotStarted);
+    const [awayClass, setAwayClass] = React.useState<string>('');
+    const [homeClass, setHomeClass] = React.useState<string>('');
 
-    const [awayClass, setAwayClass] = React.useState<string>('bg-gray-800');
-    const [homeClass, setHomeClass] = React.useState<string>('bg-gray-800');
+    const {updateEventResult} = React.useContext(CalculatorContext)!!;
 
     useEffect(() => {
-        switch (matchState) {
-            case MatchState.NotStarted:
-                setHomeClass('');
-                setAwayClass('');
-                break;
-            case MatchState.WinHome:
-                setHomeClass('text-white bg-green-700');
-                setAwayClass('text-white bg-red-700');
-                break;
-            case MatchState.WinAway:
-                setHomeClass('text-white bg-red-700');
-                setAwayClass('text-white bg-green-700');
-                break;
-            case MatchState.Draw:
-                setHomeClass('text-white bg-gray-700');
-                setAwayClass('text-white bg-gray-700');
-                break;
+        if (props.event.result == MatchResult.WinHome) {
+            setHomeClass('text-white bg-green-700');
+            setAwayClass('text-white bg-red-700');
+        } else if (props.event.result == MatchResult.WinAway) {
+            setHomeClass('text-white bg-red-700');
+            setAwayClass('text-white bg-green-700');
+        } else if (props.event.result == MatchResult.Draw) {
+            setHomeClass('text-white bg-gray-700');
+            setAwayClass('text-white bg-gray-700');
+        } else if (props.event.state == MatchState.NotStarted) {
+            setHomeClass('');
+            setAwayClass('');
         }
-    }, [matchState]);
+    }, [props.event.result]);
 
     const handleMatchCardClick = () => {
-        if (matchState == MatchState.Draw) {
-            setMatchState(MatchState.WinHome);
+        if (props.event.state == MatchState.Finished) return;
+        if (props.event.result == MatchResult.Draw) {
+            updateEventResult(props.event.idEvent, MatchResult.WinHome);
+        } else if (props.event.result == null) {
+            updateEventResult(props.event.idEvent, MatchResult.WinHome);
         } else {
-            setMatchState(state => state + 1);
+            updateEventResult(props.event.idEvent, props.event.result + 1);
         }
     }
 
@@ -68,6 +67,13 @@ const MatchCard = (props: IMatchCardProps): JSX.Element => {
         <hr className={'mx-4'}/>
         <div className={`flex justify-center pt-2`}>
             <span className={`text-xs items-center`}>{formattedDate}</span>
+        </div>
+        <div className={`flex justify-center`}>
+            <span className={`text-xs items-center`}>
+                {props.event.state == MatchState.Finished && 'beendet'}
+                {props.event.state == MatchState.NotStarted && 'noch nicht gestartet'}
+                {props.event.state == MatchState.InProgress && 'läuft'}
+            </span>
         </div>
     </Card>
 };

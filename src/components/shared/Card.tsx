@@ -15,7 +15,7 @@ const Card = (props: PropsWithChildren<ICardProps>): JSX.Element => {
         onClick={props.onClick}
         className={`block rounded-lg bg-silver-50 shadow-lg dark:bg-mine-600 ${props.cardStyles ? props.cardStyles : ''}`}>
         {props.title &&
-            <h5 className={`mb-2 text-lg font-medium leading-tight ${props.titleStyles ? props.title : ''}`}>
+            <h5 className={`mb-2 text-lg font-normal leading-tight ${props.titleStyles ? props.title : ''}`}>
                 {props.title}
             </h5>
         }

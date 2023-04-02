@@ -1,3 +1,6 @@
+import MatchState from "@/models/MatchState";
+import MatchResult from "@/models/MatchResult";
+
 export interface IEvent {
     idEvent: string
     idSoccerXML: string
@@ -12,9 +15,9 @@ export interface IEvent {
     strDescriptionEN: string
     strHomeTeam: string
     strAwayTeam: string
-    intHomeScore: string
-    intRound: string
-    intAwayScore: string
+    intHomeScore: number
+    intRound: number
+    intAwayScore: number
     intSpectators: string
     strOfficial: string
     strTimestamp: string
@@ -44,8 +47,6 @@ export interface IEvent {
     strStatus: string
     strPostponed: string
     strLocked: string
-}
-
-export interface IEvents {
-    events: IEvent[]
+    state: MatchState
+    result: MatchResult | null
 }

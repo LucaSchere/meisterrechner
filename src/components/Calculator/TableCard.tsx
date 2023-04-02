@@ -41,14 +41,11 @@ interface ITableCardProps {
 }
 
 const TableCard = (props: ITableCardProps): JSX.Element => {
-    const sortedTable = props.table.table.sort((a, b) => {
-        return a.intRank - b.intRank;
-    });
 
-    return <Card title={"Tabelle"} cardStyles={`w-fit p-4`}>
+    return <Card title={"Tabelle"} cardStyles={`w-full p-4`}>
         <div className="flex justify-center">
-            <ul className="min-w-min max-w-sm w-72">
-                {sortedTable.map(standing=> {
+            <ul className="min-w-min w-full">
+                {props.table.standings.map(standing=> {
                     return <TableEntry standing={standing} specialStandings={specialStandings} key={standing.intRank}/>
                 })}
             </ul>

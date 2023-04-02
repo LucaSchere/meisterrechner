@@ -6,6 +6,7 @@ import Theme from "@/models/Theme";
 import {useEffect} from "react";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import Calculator from "@/components/Calculator/Calculator";
+import {CalculatorProvider} from "@/context/CalculatorContext";
 
 const App = () => {
 
@@ -28,7 +29,9 @@ const App = () => {
                     <Header/>
                     <main className={`pt-16 max-w-screen overflow-hidden`}>
                         <ContentWrapper>
-                            <Calculator/>
+                            <CalculatorProvider>
+                                <Calculator/>
+                            </CalculatorProvider>
                         </ContentWrapper>
                     </main>
                 </ThemeContext.Provider>
