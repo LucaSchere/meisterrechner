@@ -1,11 +1,12 @@
 /**
- * wrapper function for type-safe fetch
+ * wrapper function for fetch
+ * maybe adding type safety later
  * @param path
  */
-const typeSafeFetch = async <T>(path: string): Promise<T> => {
+const _fetch = async (path: string): Promise<any> => {
     const response = await fetch(path);
 
-    const json: T = await response.json();
+    const json = await response.json();
     if (response.ok) {
         if (json) {
             return json;
@@ -18,4 +19,4 @@ const typeSafeFetch = async <T>(path: string): Promise<T> => {
     }
 }
 
-export default typeSafeFetch;
+export default _fetch;

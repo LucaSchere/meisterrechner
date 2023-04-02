@@ -1,3 +1,8 @@
+/**
+ * defines custom colors for the app
+ * used in tailwind theme
+ * maybe used in further ui libraries
+ */
 const colorsConfig = {
     gold: {
         '50': '#f9f8ed',
@@ -38,5 +43,9 @@ const colorsConfig = {
         '900': '#313131',
         '950': '#242424',
     },
+    'champions-league-blue': '#3562A6',
+    'europa-league-orange': '#FA6519',
+    'conference-league-green': '#128a09',
+    'relegation-red': '#D0021B',
 }
 export default colorsConfig;

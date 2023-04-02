@@ -1,31 +1,54 @@
 import * as React from 'react';
 import {useEffect} from "react";
-import {MOCK_ROUND_EVENTS} from "@/mocks/Event";
-import MatchCard from "@/components/Calculator/MatchCard";
+import MatchDay from "@/components/Calculator/MatchDay";
+import TableCard from "@/components/Calculator/TableCard";
+import {getEventsByRound, getTable} from "@/api/SportsAPI";
+import {ITable} from "@/models/ITable";
+import {IMatchDay} from "@/models/IMatchDay";
 
 const Calculator = (): JSX.Element => {
 
-    const fetchEvents = async () => {
-        //const events = await getEventsByRound(25);
-        //console.log(events);
-    };
+    const [table, setTable] = React.useState<ITable>();
+    const [upcomingMatchdays, setUpcomingMatchdays] = React.useState<IMatchDay[]>([]);
+    let nextRound = 0;
+
+    const fetchData = async () => {
+        const table = await getTable();
+        const nPlayedMatches: number[] = table.table.map(team => team.intPlayed);
+        const minNPlayedMatches = Math.min(...nPlayedMatches);
+        nextRound = minNPlayedMatches + 1;
+        setTable(table);
+
+        let fetchedMatchDays: IMatchDay[] = [];
+        for (let i = 0; i < 3; i++) {
+            const events = await getEventsByRound(nextRound + i);
+            fetchedMatchDays.push({
+                round: nextRound + i,
+                events: events
+            });
+        }
+        setUpcomingMatchdays(fetchedMatchDays);
+
+        return {table, upcomingMatchdays};
+    }
 
     useEffect(() => {
-        fetchEvents();
+        fetchData().then(_ => console.log('fetched data'));
     }, []);
 
-    return <div className={`flex flex-col gap-12`}>
-        {[MOCK_ROUND_EVENTS, MOCK_ROUND_EVENTS, MOCK_ROUND_EVENTS].map((events, round) => {
-            return <div>
-                <h3 className={`text-xl mb-2`}> Matchtag {round} </h3>
-                <div className={`grid grid-cols-2 gap-4`} key={round}>
-                    {events.events.map((event, index) => {
-                        return <MatchCard home={event.strHomeTeam} away={event.strAwayTeam} date={event.strTimestamp} key={index}/>
+
+    return <>
+        {
+            table && <div>
+                <TableCard table={table} showLegacy/>
+                <div className={`flex flex-col gap-8 my-8`}>
+                    {upcomingMatchdays.map(matchDay => {
+                        return <MatchDay round={matchDay.round} events={matchDay.events} key={matchDay.round}/>
                     })}
                 </div>
             </div>
-        })}
-    </div>
+        }
+    </>;
 };
 
 export default Calculator;

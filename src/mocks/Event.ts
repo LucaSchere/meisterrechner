@@ -1,6 +1,4 @@
-import {IEvent, IEvents} from "@/models/IEvent";
-
-export const MOCK_EVENT: IEvent = {
+const MOCK_EVENT = {
     "idEvent": "1592376",
     "idSoccerXML": "null",
     "idAPIfootball": "872651",
@@ -48,7 +46,7 @@ export const MOCK_EVENT: IEvent = {
     "strLocked": "unlocked"
 };
 
-export const MOCK_ROUND_EVENTS: IEvents = {
+const MOCK_EVENTS = {
     "events": [{
         "idEvent": "1592385",
         "idSoccerXML": "null",
@@ -281,3 +279,12 @@ export const MOCK_ROUND_EVENTS: IEvents = {
         "strLocked": "unlocked"
     }]
 }
+const getMockEvent = async () => {
+    return Promise.resolve(MOCK_EVENT);
+}
+
+const getMockEvents = async () => {
+    return Promise.resolve(MOCK_EVENTS);
+}
+
+export { getMockEvent, getMockEvents }

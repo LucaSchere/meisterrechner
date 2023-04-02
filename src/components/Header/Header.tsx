@@ -8,7 +8,7 @@ const Header = (): JSX.Element => {
             bg-silver-50 dark:bg-mine-900`}>
             <div className="flex w-full flex-wrap items-center justify-between px-6">
                 <div>
-                    <a className="text-xl text-mine-800 dark:text-silver-100" href="#">Meisterrechner</a>
+                    <a className="text-xl" href="#">Meisterrechner</a>
                 </div>
                 <ThemeSwitch/>
             </div>

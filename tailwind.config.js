@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-import colorsConfig from "./colors.config";
+import colorsConfig from "./colors.config.ts";
 
 export default {
     darkMode: 'class',
