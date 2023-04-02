@@ -6,6 +6,7 @@ import Theme from "@/models/Theme";
 import {useEffect} from "react";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import Calculator from "@/components/Calculator/Calculator";
+import {FlashTableProvider} from "@/context/FlashTableContext";
 import {CalculatorProvider} from "@/context/CalculatorContext";
 
 const App = () => {
@@ -30,7 +31,9 @@ const App = () => {
                     <main className={`pt-16 max-w-screen overflow-hidden`}>
                         <ContentWrapper>
                             <CalculatorProvider>
-                                <Calculator/>
+                                <FlashTableProvider>
+                                    <Calculator/>
+                                </FlashTableProvider>
                             </CalculatorProvider>
                         </ContentWrapper>
                     </main>

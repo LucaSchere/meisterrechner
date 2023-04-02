@@ -6,7 +6,7 @@ import renameTeam from "@/helpers/renameTeam";
 import MatchState from "@/models/MatchState";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import {IEvent} from "@/models/IEvent";
-import {CalculatorContext} from "@/context/CalculatorContext";
+import {FlashTableContext} from "@/context/FlashTableContext";
 import MatchResult from "@/models/MatchResult";
 
 interface IMatchCardProps {
@@ -24,7 +24,7 @@ const MatchCard = (props: IMatchCardProps): JSX.Element => {
     const [awayClass, setAwayClass] = React.useState<string>('');
     const [homeClass, setHomeClass] = React.useState<string>('');
 
-    const {updateEventResult} = React.useContext(CalculatorContext)!!;
+    const {updateEventResult} = React.useContext(FlashTableContext)!!;
 
     useEffect(() => {
         if (props.event.result == MatchResult.WinHome) {
@@ -43,14 +43,7 @@ const MatchCard = (props: IMatchCardProps): JSX.Element => {
     }, [props.event.result]);
 
     const handleMatchCardClick = () => {
-        if (props.event.state == MatchState.Finished) return;
-        if (props.event.result == MatchResult.Draw) {
-            updateEventResult(props.event.idEvent, MatchResult.WinHome);
-        } else if (props.event.result == null) {
-            updateEventResult(props.event.idEvent, MatchResult.WinHome);
-        } else {
-            updateEventResult(props.event.idEvent, props.event.result + 1);
-        }
+        updateEventResult(props.event);
     }
 
     return <Card onClick={handleMatchCardClick} cardStyles={'px-2 py-4 hover:cursor-pointer select-none'}>

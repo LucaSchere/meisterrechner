@@ -42,7 +42,7 @@ interface ITableCardProps {
 
 const TableCard = (props: ITableCardProps): JSX.Element => {
 
-    return <Card title={"Tabelle"} cardStyles={`w-full p-4`}>
+    return <Card title={"Tabelle"} cardStyles={`w-full p-4 my-4`}>
         <div className="flex justify-center">
             <ul className="min-w-min w-full">
                 {props.table.standings.map(standing=> {
