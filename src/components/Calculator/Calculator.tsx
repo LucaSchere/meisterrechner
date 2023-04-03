@@ -15,7 +15,7 @@ const Calculator = (): JSX.Element => {
         calculateChampionshipState(table);
     }, [table]);
 
-    return <div className={`max-w-sm`}>
+    return <div className={`w-full max-w-5xl`}>
         {
             table && upcomingMatchdays && <>
                 <div className={``}>
