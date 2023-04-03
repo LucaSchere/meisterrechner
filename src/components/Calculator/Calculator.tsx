@@ -22,7 +22,7 @@ const Calculator = (): JSX.Element => {
                     <StatusCard/>
                     <TableCard table={table} showLegacy/>
                 </div>
-                <div className={`flex flex-col gap-4 my-4`}>
+                <div className={`grid md:grid-cols-2 gap-4 my-4`}>
                     {upcomingMatchdays.map(matchDay => {
                         return <MatchDay matchDay={matchDay} key={matchDay.round}/>
                     })}
