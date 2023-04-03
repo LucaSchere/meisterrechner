@@ -3,6 +3,8 @@ import {ITable} from "@/models/ITable";
 import {IMatchDay} from "@/models/IMatchDay";
 import {getEventsByRound, getTable} from "@/api/SportsAPI";
 
+const ROUNDS_PER_CHAMPIONSHIP = 36;
+
 interface IData {
     table: ITable;
     initialTable: ITable;
@@ -24,10 +26,10 @@ export function useData(): IData {
         const nextRound = minNPlayedMatches + 1;
 
         let upcomingMatchdays: IMatchDay[] = [];
-        for (let i = 0; i < 3; i++) {
-            const events = await getEventsByRound(nextRound + i);
+        for (let round = nextRound; round <= ROUNDS_PER_CHAMPIONSHIP; round++) {
+            const events = await getEventsByRound(round);
             upcomingMatchdays.push({
-                round: nextRound + i,
+                round: round,
                 events: events
             });
         }

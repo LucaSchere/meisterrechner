@@ -8,12 +8,12 @@ import {CalculatorContext} from "@/context/CalculatorContext";
 
 const Calculator = (): JSX.Element => {
 
-    const {table, upcomingMatchdays} = useContext(FlashTableContext)!!;
+    const {table, upcomingMatchdays} = useContext(FlashTableContext)!;
     const {calculateChampionshipState} = useContext(CalculatorContext)!!;
 
     useEffect(() => {
-        calculateChampionshipState(table);
-    }, [table]);
+        calculateChampionshipState(table, upcomingMatchdays);
+    }, [table, upcomingMatchdays]);
 
     return <div className={`w-full max-w-5xl`}>
         {
@@ -22,7 +22,7 @@ const Calculator = (): JSX.Element => {
                     <StatusCard/>
                     <TableCard table={table} showLegacy/>
                 </div>
-                <div className={`grid md:grid-cols-2 gap-4 my-4`}>
+                <div className={`grid md:grid-cols-2 gap-4 lg:gap-6 my-4`}>
                     {upcomingMatchdays.map(matchDay => {
                         return <MatchDay matchDay={matchDay} key={matchDay.round}/>
                     })}
