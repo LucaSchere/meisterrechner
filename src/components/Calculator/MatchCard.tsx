@@ -17,7 +17,7 @@ const MatchCard = (props: IMatchCardProps): JSX.Element => {
 
     const onUltraSmallDevice = useMediaQuery('(max-width: 360px)');
 
-    const formattedDate = formatMatchDate(props.event.strTimestamp);
+    const formattedDate = formatMatchDate(props.event.date);
     const home = renameTeam(props.event.strHomeTeam, onUltraSmallDevice);
     const away = renameTeam(props.event.strAwayTeam, onUltraSmallDevice);
 
