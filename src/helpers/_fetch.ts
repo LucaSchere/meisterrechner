@@ -5,11 +5,7 @@
  */
 const _fetch = async (path: string): Promise<any> => {
     const response = await fetch(path);
-
     const json = await response.json();
-
-    console.log(json);
-
     if (response.ok) {
         if (json) {
             return json;

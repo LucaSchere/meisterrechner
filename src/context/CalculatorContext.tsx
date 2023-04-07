@@ -4,6 +4,7 @@ import {ChampionshipState} from "@/models/ChampionshipState";
 import {IMatchDay} from "@/models/IMatchDay";
 import MatchResult from "@/models/MatchResult";
 import {ChampionshipWinType} from "@/models/ChampionshipWinType";
+import {IEvent} from "@/models/IEvent";
 
 interface ICalculatorContext {
     calculateChampionshipState: (table: ITable, upcomingMatchdays: IMatchDay[]) => void;
@@ -42,13 +43,28 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
             .filter(standing => standing.idTeam != firstTeam.idTeam)
             .reduce((max, standing) => standing.intPoints > max.intPoints ? standing : max);
 
-        const bestContenderMaxPossiblePoints = bestContender.intPoints + (MAX_MATCHES - bestContender.intPlayed) * POINTS_PER_WIN
+        let bestContenderMaxPossiblePoints = bestContender.intPoints + (MAX_MATCHES - bestContender.intPlayed) * POINTS_PER_WIN
 
         const championshipState =
             bestContenderMaxPossiblePoints >= firstTeam.intPoints ?
                 ChampionshipState.NotDecided : ChampionshipState.Determined;
         setChampionshipState(championshipState);
 
+        /*
+         * based on the championship state the deciding round is calculated
+         */
+        calculateDecidingRound(championshipState, firstTeam, bestContender, upcomingMatchdays, bestContenderMaxPossiblePoints);
+    }
+
+    /**
+     * Calculates the deciding round based on the championship state and the results of calculateChampionshipState
+     * @param championshipState
+     * @param firstTeam
+     * @param bestContender
+     * @param upcomingMatchdays
+     * @param bestContenderMaxPossiblePoints
+     */
+    const calculateDecidingRound = (championshipState: ChampionshipState, firstTeam: IStanding, bestContender: IStanding, upcomingMatchdays: IMatchDay[],  bestContenderMaxPossiblePoints: number) => {
         if (championshipState == ChampionshipState.NotDecided) {
             setDecidingRound(-1);
             return;
@@ -62,45 +78,119 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
 
         /*
          * Iterate over all upcoming matchdays starting with the last one
-         * check if the first team would still be the best ranked contender if they lose the points of this matchday
-         * if they would not be the best ranked contender after subtracting the matchday: set the deciding round
+         * check if the first team would still be the best ranked contender if they lose the points of the i-th matchday
+         * if they would not be the best ranked contender after subtracting the matchday, the i-th matchday is the deciding round
          */
         for (let i = upcomingMatchdays.length - 1; i >= 0; i--) {
-
-
-            /** TODO
-             * case of sofameister
-             * e.g. lose in matchday 34 of contender & firstTeam not fully played matchdays before
-             * in this case the deciding round is 34 but could be earlyer if the firstTeam wins in the matchday before
-             */
-
-
             const eventOfFirstTeam = upcomingMatchdays[i].events.find(event => event.idHomeTeam == firstTeam.idTeam || event.idAwayTeam == firstTeam.idTeam)!;
-            const pointsOfFirstTeamInThisMatchDay =
+            const eventOfContender = upcomingMatchdays[i].events.find(event => event.idHomeTeam == bestContender.idTeam || event.idAwayTeam == bestContender.idTeam)!;
+
+            const periodFromEventOfFirstTeamToEventOfContender = eventOfContender.date.getTime() - eventOfFirstTeam.date.getTime();
+
+            const pointsOfFirstTeamOnThisMatchDay =
                 (eventOfFirstTeam.result == MatchResult.WinHome && eventOfFirstTeam.idHomeTeam == firstTeam.idTeam) ||
                 (eventOfFirstTeam.result == MatchResult.WinAway && eventOfFirstTeam.idAwayTeam == firstTeam.idTeam) ? POINTS_PER_WIN :
                     eventOfFirstTeam.result == MatchResult.Draw ? POINTS_PER_DRAW : 0;
-            firstTeamPoints -= pointsOfFirstTeamInThisMatchDay;
+
+            const pointsLostByContenderOnThisMatchDay =
+                (eventOfContender.result == MatchResult.WinHome && eventOfContender.idAwayTeam == bestContender.idTeam) ||
+                (eventOfContender.result == MatchResult.WinAway && eventOfContender.idHomeTeam == bestContender.idTeam) ? POINTS_PER_WIN :
+                    eventOfContender.result == MatchResult.Draw ? POINTS_PER_WIN - POINTS_PER_DRAW : 0;
+
+            const minimalLeadOfFirstTeamInTheEndOfTheSeasonAsAfterMatchDayI = firstTeamPoints - bestContenderMaxPossiblePoints;
+
+            firstTeamPoints -= pointsOfFirstTeamOnThisMatchDay;
+            bestContenderMaxPossiblePoints += pointsLostByContenderOnThisMatchDay;
+
             if (firstTeamPoints <= bestContenderMaxPossiblePoints) {
                 setDecidingRound(upcomingMatchdays[i].round);
-                calculateChampionshipWinType(firstTeam, bestContender, upcomingMatchdays[i]);
+                calculateChampionshipWinType(
+                    eventOfFirstTeam,
+                    eventOfContender,
+                    periodFromEventOfFirstTeamToEventOfContender,
+                    bestContenderMaxPossiblePoints,
+                    firstTeamPoints,
+                    pointsLostByContenderOnThisMatchDay,
+                    minimalLeadOfFirstTeamInTheEndOfTheSeasonAsAfterMatchDayI,
+                    pointsOfFirstTeamOnThisMatchDay);
                 break;
             }
         }
+        return bestContenderMaxPossiblePoints;
     }
 
-    const calculateChampionshipWinType = (firstStanding: IStanding, contenderStanding: IStanding, matchDay: IMatchDay) => {
-        const eventOfFirstTeam = matchDay.events.find(event => event.idHomeTeam == firstStanding.idTeam || event.idAwayTeam == firstStanding.idTeam)!;
-        const eventOfContender = matchDay.events.find(event => event.idHomeTeam == contenderStanding.idTeam || event.idAwayTeam == contenderStanding.idTeam)!;
+    /**
+     * Calculates the type of the championship win based on the results of calculateDecidingRound
+     * @param eventOfFirstTeam
+     * @param eventOfContender
+     * @param periodFromEventOfFirstTeamToEventOfContender
+     * @param bestContenderMaxPossiblePoints
+     * @param firstTeamPoints
+     * @param pointsLostByContenderOnThisMatchDay
+     * @param minimalLeadOfFirstTeamInTheEndOfTheSeasonAsAfterMatchDayI
+     * @param pointsOfFirstTeamOnThisMatchDay
+     */
+    const calculateChampionshipWinType = (eventOfFirstTeam: IEvent,
+                                          eventOfContender: IEvent,
+                                          periodFromEventOfFirstTeamToEventOfContender: number,
+                                          bestContenderMaxPossiblePoints: number,
+                                          firstTeamPoints: number,
+                                          pointsLostByContenderOnThisMatchDay: number,
+                                          minimalLeadOfFirstTeamInTheEndOfTheSeasonAsAfterMatchDayI: number,
+                                          pointsOfFirstTeamOnThisMatchDay: number) => {
 
-        const firstTeamWins = (eventOfFirstTeam.result == MatchResult.WinHome && eventOfFirstTeam.idHomeTeam == firstStanding.idTeam) ||
-            (eventOfFirstTeam.result == MatchResult.WinAway && eventOfFirstTeam.idAwayTeam == firstStanding.idTeam);
-        const contenderWins = (eventOfContender.result == MatchResult.WinHome && eventOfContender.idHomeTeam == contenderStanding.idTeam) ||
-            (eventOfContender.result == MatchResult.WinAway && eventOfContender.idAwayTeam == contenderStanding.idTeam);
+        let decidedByContender = false;
 
-        /** TODO
-         * check for sofameister
+        /*
+         * check if the first team plays against the contender in this matchday
+         * in this case the championship is never decided by the contender
          */
+        if (!(eventOfFirstTeam.idEvent == eventOfContender.idEvent)) {
+
+            /*
+             * check if the contender had to play his game before the first team
+             * in this case the question if the contender decided the championship is not trivial because in most cases the final team had to
+             * play to finally decide the championship
+             */
+            if (periodFromEventOfFirstTeamToEventOfContender < 0) {
+
+                /*
+                 * this value represents the points the first team had to gain in this matchday to finally decide the championship
+                 * if the value is 6 it means that the first team had to gain 3 points (win) and the contender had to lose (-3 points in the championship race)
+                 */
+                const pointsFirstTeamHadToGainInThisMatchDayToWinTheChampionship = bestContenderMaxPossiblePoints - firstTeamPoints;
+
+                /*
+                 * if this condition is true the first team had to play is game to decide the championship
+                 * so the championship wasn't decided after the contender game
+                 */
+                const contenderFulfilledHisRequirementsToKeepTheChampionshipGoing =
+                    pointsFirstTeamHadToGainInThisMatchDayToWinTheChampionship - pointsLostByContenderOnThisMatchDay >= 0;
+
+                /*
+                 * as addition to the condition in the else block the pointsOfFirstTeamOnThisMatchDay must be subtracted because
+                 * the first team has not yet played this matchday
+                 */
+                const contenderHadTheChanceToKeepTheChampionshipGoing =
+                    pointsLostByContenderOnThisMatchDay >= minimalLeadOfFirstTeamInTheEndOfTheSeasonAsAfterMatchDayI - pointsOfFirstTeamOnThisMatchDay;
+
+                /*
+                 * the championship was decided by the contender if the contender had the chance to keep the championship going
+                 * and didn't fulfill his requirements to keep the championship going
+                 */
+                decidedByContender =
+                    !contenderFulfilledHisRequirementsToKeepTheChampionshipGoing &&
+                    contenderHadTheChanceToKeepTheChampionshipGoing
+
+            } else {
+                /*
+                 * checks if the contender had the chance to keep the championship going
+                 * this condition is trivial because the result of the first team game is already known
+                 */
+                decidedByContender = pointsLostByContenderOnThisMatchDay >= minimalLeadOfFirstTeamInTheEndOfTheSeasonAsAfterMatchDayI;
+            }
+        }
+        setChampionshipWinType(decidedByContender ? ChampionshipWinType.OnCouch : ChampionshipWinType.OnField);
     }
 
     return (

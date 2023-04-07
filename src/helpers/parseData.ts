@@ -48,6 +48,7 @@ const parseEvents = (data: any): IEvent[] => {
             intHomeScore: parseInt(event.intHomeScore),
             intAwayScore: parseInt(event.intAwayScore),
             intRound: parseInt(event.intRound),
+            date: new Date(event.strTimestamp),
             state: state,
             result: result
         };
