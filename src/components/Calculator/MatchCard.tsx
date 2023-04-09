@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect} from 'react';
+import {useContext, useEffect} from 'react';
 import Card from "@/components/shared/Card";
 import formatMatchDate from "@/helpers/formatMatchDate";
 import renameTeam from "@/helpers/renameTeam";
@@ -8,12 +8,16 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 import {IEvent} from "@/models/IEvent";
 import {FlashTableContext} from "@/context/FlashTableContext";
 import MatchResult from "@/models/MatchResult";
+import {CalculatorContext} from "@/context/CalculatorContext";
 
 interface IMatchCardProps {
     event: IEvent;
 }
 
 const MatchCard = (props: IMatchCardProps): JSX.Element => {
+
+    const {decidingEvent} = useContext(CalculatorContext)!;
+    const {updateEventResult} = React.useContext(FlashTableContext)!;
 
     const onUltraSmallDevice = useMediaQuery('(max-width: 360px)');
 
@@ -23,8 +27,13 @@ const MatchCard = (props: IMatchCardProps): JSX.Element => {
 
     const [awayClass, setAwayClass] = React.useState<string>('');
     const [homeClass, setHomeClass] = React.useState<string>('');
+    const [isDecidingMatch, setIsDecidingMatch] = React.useState<boolean>(false);
 
-    const {updateEventResult} = React.useContext(FlashTableContext)!!;
+    useEffect(() => {
+        setIsDecidingMatch(
+            props.event.idEvent == decidingEvent?.idEvent
+        );
+    }, [decidingEvent]);
 
     useEffect(() => {
         if (props.event.result == MatchResult.WinHome) {
@@ -46,29 +55,32 @@ const MatchCard = (props: IMatchCardProps): JSX.Element => {
         updateEventResult(props.event);
     }
 
-    return <Card onClick={handleMatchCardClick} cardStyles={'px-2 py-4 hover:cursor-pointer select-none'}>
-        <div className={`flex flex-row justify-around pb-2`}>
+    return <div className={`${isDecidingMatch && 'decider-indicator'}`}>
+        <Card onClick={handleMatchCardClick}
+              cardStyles={'px-2 py-4 hover:cursor-pointer select-none'}>
+            <div className={`flex flex-row justify-around pb-2`}>
             <span
                 className={`text-xs badge ${homeClass}`}>
                 {home}
             </span>
-            <span
-                className={`text-xs badge ${awayClass}`}>
+                <span
+                    className={`text-xs badge ${awayClass}`}>
                 {away}
             </span>
-        </div>
-        <hr className={'mx-4'}/>
-        <div className={`flex justify-center pt-2`}>
-            <span className={`text-xs items-center`}>{formattedDate}</span>
-        </div>
-        <div className={`flex justify-center`}>
+            </div>
+            <hr className={'mx-4'}/>
+            <div className={`flex justify-center pt-2`}>
+                <span className={`text-xs items-center`}>{formattedDate}</span>
+            </div>
+            <div className={`flex justify-center`}>
             <span className={`text-xs items-center`}>
                 {props.event.state == MatchState.Finished && 'beendet'}
                 {props.event.state == MatchState.NotStarted && 'noch nicht gestartet'}
                 {props.event.state == MatchState.InProgress && 'läuft'}
             </span>
-        </div>
-    </Card>
+            </div>
+        </Card>
+    </div>
 };
 
 export default MatchCard;

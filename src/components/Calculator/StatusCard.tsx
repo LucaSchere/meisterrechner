@@ -10,15 +10,14 @@ import useScrollOffset from "@/hooks/useScrollOffset";
 
 const StatusCard = (): JSX.Element => {
 
-    const {winningTeam, championshipState, decidingMatchDay, championshipWinType} = useContext(CalculatorContext)!!;
+    const {winningTeam, championshipState, decidingEvent, championshipWinType} = useContext(CalculatorContext)!!;
     const [offsetReached, listenToScroll, stopListeningToScroll] = useScrollOffset(80); // Header + ContentWrapper padding
     const onSmallDevice = useMediaQuery('(max-width: 560px)');
 
-    const eventOfWinner = decidingMatchDay?.events.find(event => event.idHomeTeam == winningTeam?.idTeam || event.idAwayTeam == winningTeam?.idTeam)!;
-    const opponent = eventOfWinner?.idHomeTeam == winningTeam?.idTeam ? eventOfWinner?.strAwayTeam : eventOfWinner?.strHomeTeam;
+    const opponent = decidingEvent?.idHomeTeam == winningTeam?.idTeam ? decidingEvent?.strAwayTeam : decidingEvent?.strHomeTeam;
 
     const determinedMessage =
-        `${renameTeam(winningTeam?.strTeam ?? '', true)} wird Meister in Runde ${decidingMatchDay?.round} ` +
+        `${renameTeam(winningTeam?.strTeam ?? '', true)} wird Meister in Runde ${decidingEvent?.intRound} ` +
         `${championshipWinType == ChampionshipWinType.OnCouch ? 'auf dem Sofa' : `gegen ${renameTeam(opponent ?? '', onSmallDevice)}`} 🏆`;
     const notDecidedMessage = `Meisterschaft noch offen ⚽`;
     const message = championshipState == ChampionshipState.Determined ? determinedMessage : notDecidedMessage;
