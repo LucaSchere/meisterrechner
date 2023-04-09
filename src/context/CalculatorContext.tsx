@@ -9,8 +9,9 @@ import {IEvent} from "@/models/IEvent";
 interface ICalculatorContext {
     calculateChampionshipState: (table: ITable, upcomingMatchdays: IMatchDay[]) => void;
     championshipState: ChampionshipState;
-    decidingRound: number;
+    decidingMatchDay: IMatchDay | null;
     championshipWinType: ChampionshipWinType;
+    winningTeam: IStanding | null;
 }
 
 export const CalculatorContext = createContext<ICalculatorContext | null>(null);
@@ -22,8 +23,9 @@ const MAX_MATCHES = 36;
 export const CalculatorProvider = (props: PropsWithChildren) => {
 
     const [championshipState, setChampionshipState] = useState<ChampionshipState>(ChampionshipState.NotDecided)
-    const [decidingRound, setDecidingRound] = useState<number>(-1);
+    const [decidingMatchDay, setDecidingMatchDay] = useState<IMatchDay | null>(null);
     const [championshipWinType, setChampionshipWinType] = useState<ChampionshipWinType>(ChampionshipWinType.OnField);
+    const [winningTeam, setWinningTeam] = useState<IStanding | null>(null);
 
     /**
      * Calculates the championship state and the deciding round if the championship is decided yet
@@ -50,26 +52,26 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
                 ChampionshipState.NotDecided : ChampionshipState.Determined;
         setChampionshipState(championshipState);
 
-        /*
-         * based on the championship state the deciding round is calculated
-         */
-        calculateDecidingRound(championshipState, firstTeam, bestContender, upcomingMatchdays, bestContenderMaxPossiblePoints);
+
+        if (championshipState == ChampionshipState.Determined) {
+            setWinningTeam(firstTeam);
+            /*
+             * based on the championship state the deciding round is calculated
+             */
+            calculateDecidingMatchDay(firstTeam, bestContender, upcomingMatchdays, bestContenderMaxPossiblePoints);
+        } else {
+            setDecidingMatchDay(null);
+        }
     }
 
     /**
      * Calculates the deciding round based on the championship state and the results of calculateChampionshipState
-     * @param championshipState
      * @param firstTeam
      * @param bestContender
      * @param upcomingMatchdays
      * @param bestContenderMaxPossiblePoints
      */
-    const calculateDecidingRound = (championshipState: ChampionshipState, firstTeam: IStanding, bestContender: IStanding, upcomingMatchdays: IMatchDay[],  bestContenderMaxPossiblePoints: number) => {
-        if (championshipState == ChampionshipState.NotDecided) {
-            setDecidingRound(-1);
-            return;
-        }
-
+    const calculateDecidingMatchDay = (firstTeam: IStanding, bestContender: IStanding, upcomingMatchdays: IMatchDay[], bestContenderMaxPossiblePoints: number) => {
         /*
          * If the championship ist not decided yet there is at least one participant that could still overtake the first team
          * the deciding round is the round in which the current first team could possibly still lose the championship
@@ -103,7 +105,7 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
             bestContenderMaxPossiblePoints += pointsLostByContenderOnThisMatchDay;
 
             if (firstTeamPoints <= bestContenderMaxPossiblePoints) {
-                setDecidingRound(upcomingMatchdays[i].round);
+                setDecidingMatchDay(upcomingMatchdays[i]);
                 calculateChampionshipWinType(
                     eventOfFirstTeam,
                     eventOfContender,
@@ -120,7 +122,7 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
     }
 
     /**
-     * Calculates the type of the championship win based on the results of calculateDecidingRound
+     * Calculates the type of the championship win based on the results of calculateDecidingMatchDay
      * @param eventOfFirstTeam
      * @param eventOfContender
      * @param periodFromEventOfFirstTeamToEventOfContender
@@ -195,7 +197,7 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
 
     return (
         <CalculatorContext.Provider
-            value={{calculateChampionshipState, championshipState, decidingRound, championshipWinType}}>
+            value={{calculateChampionshipState, championshipState, decidingMatchDay, championshipWinType, winningTeam}}>
             {props.children}
         </CalculatorContext.Provider>
     );

@@ -12,6 +12,6 @@ const mapping: { [key: string]: {short: string, long: string }} = {
 }
 
 const renameTeam = (teamName: string, short?: boolean) => {
-    return (short ? mapping[teamName].short : mapping[teamName].long) || teamName;
+    return (short ? mapping[teamName]?.short : mapping[teamName]?.long) || teamName;
 }
 export default renameTeam;

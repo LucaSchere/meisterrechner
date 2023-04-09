@@ -4,8 +4,10 @@ import * as React from 'react';
 import {PropsWithChildren} from "react";
 
 const ContentWrapper = (props: PropsWithChildren): JSX.Element => {
-    return <div className={`content-width flex flex-row justify-center p-4`}>
-        {props.children}
+    return <div className={`absolute w-full flex flex-row justify-center p-4`}>
+        <div className={`content-width `}>
+            {props.children}
+        </div>
     </div>
 };
 
