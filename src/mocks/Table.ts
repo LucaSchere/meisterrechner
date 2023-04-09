@@ -1,7 +1,7 @@
 const MOCK_TABLE = {
-    table: [
+    "table": [
         {
-            "idStanding": "2598806",
+            "idStanding": "2623387",
             "intRank": "1",
             "idTeam": "134001",
             "strTeam": "Young Boys",
@@ -19,10 +19,10 @@ const MOCK_TABLE = {
             "intGoalsAgainst": "19",
             "intGoalDifference": "41",
             "intPoints": "54",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598807",
+            "idStanding": "2623388",
             "intRank": "2",
             "idTeam": "133991",
             "strTeam": "Servette",
@@ -30,20 +30,20 @@ const MOCK_TABLE = {
             "idLeague": "4675",
             "strLeague": "Swiss Super League",
             "strSeason": "2022-2023",
-            "strForm": "WDLDD",
+            "strForm": "DWDLD",
             "strDescription": "Promotion - Champions League (Qualification: )",
-            "intPlayed": "26",
+            "intPlayed": "27",
             "intWin": "9",
             "intLoss": "5",
-            "intDraw": "12",
-            "intGoalsFor": "32",
-            "intGoalsAgainst": "34",
+            "intDraw": "13",
+            "intGoalsFor": "34",
+            "intGoalsAgainst": "36",
             "intGoalDifference": "-2",
-            "intPoints": "39",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "intPoints": "40",
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598808",
+            "idStanding": "2623389",
             "intRank": "3",
             "idTeam": "134406",
             "strTeam": "St. Gallen",
@@ -61,10 +61,10 @@ const MOCK_TABLE = {
             "intGoalsAgainst": "38",
             "intGoalDifference": "10",
             "intPoints": "35",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598809",
+            "idStanding": "2623390",
             "intRank": "4",
             "idTeam": "136037",
             "strTeam": "Lugano",
@@ -82,10 +82,10 @@ const MOCK_TABLE = {
             "intGoalsAgainst": "38",
             "intGoalDifference": "1",
             "intPoints": "35",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598810",
+            "idStanding": "2623391",
             "intRank": "5",
             "idTeam": "133957",
             "strTeam": "FC Basel",
@@ -93,20 +93,20 @@ const MOCK_TABLE = {
             "idLeague": "4675",
             "strLeague": "Swiss Super League",
             "strSeason": "2022-2023",
-            "strForm": "WLDWD",
+            "strForm": "DWLDW",
             "strDescription": "",
-            "intPlayed": "26",
+            "intPlayed": "27",
             "intWin": "8",
             "intLoss": "8",
-            "intDraw": "10",
-            "intGoalsFor": "35",
-            "intGoalsAgainst": "31",
+            "intDraw": "11",
+            "intGoalsFor": "36",
+            "intGoalsAgainst": "32",
             "intGoalDifference": "4",
-            "intPoints": "34",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "intPoints": "35",
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598811",
+            "idStanding": "2623392",
             "intRank": "6",
             "idTeam": "134391",
             "strTeam": "Grasshoppers",
@@ -124,10 +124,10 @@ const MOCK_TABLE = {
             "intGoalsAgainst": "42",
             "intGoalDifference": "-2",
             "intPoints": "34",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598812",
+            "idStanding": "2623393",
             "intRank": "7",
             "idTeam": "134123",
             "strTeam": "Lucerne",
@@ -145,10 +145,10 @@ const MOCK_TABLE = {
             "intGoalsAgainst": "37",
             "intGoalDifference": "2",
             "intPoints": "33",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598813",
+            "idStanding": "2623394",
             "intRank": "8",
             "idTeam": "134396",
             "strTeam": "Zurich",
@@ -156,20 +156,20 @@ const MOCK_TABLE = {
             "idLeague": "4675",
             "strLeague": "Swiss Super League",
             "strSeason": "2022-2023",
-            "strForm": "DWLDD",
+            "strForm": "DDWLD",
             "strDescription": "",
-            "intPlayed": "26",
+            "intPlayed": "27",
             "intWin": "6",
             "intLoss": "9",
-            "intDraw": "11",
-            "intGoalsFor": "27",
-            "intGoalsAgainst": "39",
+            "intDraw": "12",
+            "intGoalsFor": "28",
+            "intGoalsAgainst": "40",
             "intGoalDifference": "-12",
-            "intPoints": "29",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "intPoints": "30",
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598814",
+            "idStanding": "2623395",
             "intRank": "9",
             "idTeam": "135947",
             "strTeam": "FC Sion",
@@ -177,20 +177,20 @@ const MOCK_TABLE = {
             "idLeague": "4675",
             "strLeague": "Swiss Super League",
             "strSeason": "2022-2023",
-            "strForm": "WLLDL",
+            "strForm": "DWLLD",
             "strDescription": "",
-            "intPlayed": "26",
+            "intPlayed": "27",
             "intWin": "6",
             "intLoss": "12",
-            "intDraw": "8",
-            "intGoalsFor": "32",
-            "intGoalsAgainst": "50",
+            "intDraw": "9",
+            "intGoalsFor": "34",
+            "intGoalsAgainst": "52",
             "intGoalDifference": "-18",
-            "intPoints": "26",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "intPoints": "27",
+            "dateUpdated": "2023-04-08 23:00:31"
         },
         {
-            "idStanding": "2598815",
+            "idStanding": "2623396",
             "intRank": "10",
             "idTeam": "138984",
             "strTeam": "FC Winterthur",
@@ -208,7 +208,7 @@ const MOCK_TABLE = {
             "intGoalsAgainst": "46",
             "intGoalDifference": "-24",
             "intPoints": "26",
-            "dateUpdated": "2023-04-02 23:00:10"
+            "dateUpdated": "2023-04-08 23:00:31"
         }
     ]
 }
