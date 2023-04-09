@@ -28,7 +28,7 @@ const App = () => {
             {mounted &&
                 <ThemeContext.Provider value={{theme, setTheme}}>
                     <Header/>
-                    <main className={`pt-16 max-w-screen overflow-hidden`}>
+                    <main className={`overflow-hidden`}>
                         <ContentWrapper>
                             <CalculatorProvider>
                                 <FlashTableProvider>

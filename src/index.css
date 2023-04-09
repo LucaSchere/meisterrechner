@@ -45,10 +45,45 @@ body {
 
 @layer components {
     .content-width {
-        @apply mx-auto max-w-7xl;
+        @apply mx-auto w-full md:max-w-5xl;
     }
 
     .badge {
         @apply inline-block whitespace-nowrap rounded-[0.27rem] px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline font-bold leading-none overflow-hidden;
     }
+
+    .header {
+        @apply justify-between shadow-md bg-silver-50 dark:bg-mine-900;
+    }
+
+    .growing-status-card {
+        width: calc(100% - 32px);
+        animation: grow 225ms forwards;
+    }
+
+    .growing-status-card-md {
+        @apply w-[1024px];
+        animation: grow-md 225ms forwards;
+    }
+
+    @keyframes grow {
+        0% {
+            width: calc(100% - 32px);
+        }
+        /* 100% - contentwrapper padding */
+        100% {
+            @apply w-screen;
+        }
+    }
+
+    @keyframes grow-md {
+        0% {
+            @apply w-[1024px];
+        }
+        100% {
+            @apply w-screen;
+        }
+    }
 }
+
+

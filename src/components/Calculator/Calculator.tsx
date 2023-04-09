@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {useContext, useEffect} from "react";
-import MatchDay from "@/components/Calculator/MatchDay";
 import TableCard from "@/components/Calculator/TableCard";
 import {FlashTableContext} from "@/context/FlashTableContext";
 import StatusCard from "@/components/Calculator/StatusCard";
 import {CalculatorContext} from "@/context/CalculatorContext";
+import Bracket from "@/components/Calculator/Bracket";
 
 const Calculator = (): JSX.Element => {
 
@@ -15,17 +15,15 @@ const Calculator = (): JSX.Element => {
         calculateChampionshipState(table, upcomingMatchdays);
     }, [table, upcomingMatchdays]);
 
-    return <div className={`w-full max-w-5xl`}>
+    return <div className={`relative`}>
         {
             table && upcomingMatchdays && <>
-                <div className={``}>
+                <div className={`h-16`}>
                     <StatusCard/>
-                    <TableCard table={table} showLegacy/>
                 </div>
-                <div className={`grid md:grid-cols-2 gap-4 lg:gap-6 my-4`}>
-                    {upcomingMatchdays.map(matchDay => {
-                        return <MatchDay matchDay={matchDay} key={matchDay.round}/>
-                    })}
+                <div className={`mt-4`}>
+                    <TableCard table={table} showLegacy/>
+                    <Bracket upcomingMatchdays={upcomingMatchdays}/>
                 </div>
             </>
         }
