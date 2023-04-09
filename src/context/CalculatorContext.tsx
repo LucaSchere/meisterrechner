@@ -10,6 +10,7 @@ interface ICalculatorContext {
     calculateChampionshipState: (table: ITable, upcomingMatchdays: IMatchDay[]) => void;
     championshipState: ChampionshipState;
     decidingMatchDay: IMatchDay | null;
+    decidingEvent: IEvent | null;
     championshipWinType: ChampionshipWinType;
     winningTeam: IStanding | null;
 }
@@ -24,6 +25,7 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
 
     const [championshipState, setChampionshipState] = useState<ChampionshipState>(ChampionshipState.NotDecided)
     const [decidingMatchDay, setDecidingMatchDay] = useState<IMatchDay | null>(null);
+    const [decidingEvent, setDecidingEvent] = useState<IEvent | null>(null);
     const [championshipWinType, setChampionshipWinType] = useState<ChampionshipWinType>(ChampionshipWinType.OnField);
     const [winningTeam, setWinningTeam] = useState<IStanding | null>(null);
 
@@ -61,6 +63,7 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
             calculateDecidingMatchDay(firstTeam, bestContender, upcomingMatchdays, bestContenderMaxPossiblePoints);
         } else {
             setDecidingMatchDay(null);
+            setDecidingEvent(null);
         }
     }
 
@@ -193,11 +196,12 @@ export const CalculatorProvider = (props: PropsWithChildren) => {
             }
         }
         setChampionshipWinType(decidedByContender ? ChampionshipWinType.OnCouch : ChampionshipWinType.OnField);
+        setDecidingEvent(decidedByContender ? eventOfContender : eventOfFirstTeam);
     }
 
     return (
         <CalculatorContext.Provider
-            value={{calculateChampionshipState, championshipState, decidingMatchDay, championshipWinType, winningTeam}}>
+            value={{calculateChampionshipState, championshipState, decidingMatchDay, decidingEvent, championshipWinType, winningTeam}}>
             {props.children}
         </CalculatorContext.Provider>
     );

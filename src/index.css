@@ -84,6 +84,16 @@ body {
             @apply w-screen;
         }
     }
+
+    .decider-indicator::before {
+        content: '🏆';
+        display: inline-block;
+        position: absolute;
+        rotate: -10deg;
+        transform: translate(-55%, -55%);
+        width: 12px;
+        height: 12px;
+    }
 }
 
 
